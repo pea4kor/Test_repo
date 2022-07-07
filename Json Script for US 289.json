@@ -1,0 +1,72 @@
+{
+  "properties": {
+    "displayName": "MSA-AMN-01.02 - Set up an alert rule for unauthorized request",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "EISA-ACC-401 - Secure Log-On",
+    "metadata": {
+      "category": "EISAITSystem",
+      "createdBy": "ba1ff1a1-4d9f-44dd-b483-1ffaadd4c33f",
+      "createdOn": "2021-09-10T05:40:04.3177278Z",
+      "updatedBy": "ba1ff1a1-4d9f-44dd-b483-1ffaadd4c33f",
+      "updatedOn": "2021-09-10T14:37:19.6926987Z"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the execution of the policy"
+        },
+        "allowedValues": [
+          "AuditIfNotExists",
+          "Disabled"
+        ],
+        "defaultValue": "AuditIfNotExists"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "field": "type",
+        "equals": "Microsoft.ApiManagement/service"
+      },
+      "then": {
+        "effect": "[parameters('effect')]",
+        "details": {
+          "type": "Microsoft.Insights/metricAlerts",
+          "existenceCondition": {
+            "allOf": [
+              {
+                "field": "Microsoft.Insights/metricalerts/enabled",
+                "equals": "true"
+              },
+              {
+                "field": "Microsoft.Insights/metricAlerts/criteria.Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria.allOf[*].metricName",
+                "equals": "Requests"
+              },
+              {
+                "field": "Microsoft.Insights/metricAlerts/criteria.Microsoft-Azure-Monitor-MultipleResourceMultipleMetricCriteria.allOf[*].dimensions[*].name",
+                "equals": "GatewayResponseCodeCategory"
+              },
+              {
+                "field": "Microsoft.Insights/metricAlerts/criteria.Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria.allOf[*].dimensions[*].values[*]",
+                "equals": "4xx"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "id": "/subscriptions/64238fe1-943b-49f8-bff3-9a61736c81af/providers/Microsoft.Authorization/policyDefinitions/2619a17d-0af1-49ce-a043-cf89ed5cdc8a",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "name": "2619a17d-0af1-49ce-a043-cf89ed5cdc8a",
+  "systemData": {
+    "createdBy": "pea4kor@bosch.com",
+    "createdByType": "User",
+    "createdAt": "2021-09-10T05:40:04.2814725Z",
+    "lastModifiedBy": "pea4kor@bosch.com",
+    "lastModifiedByType": "User",
+    "lastModifiedAt": "2021-09-10T14:37:19.6766807Z"
+  }
+}
